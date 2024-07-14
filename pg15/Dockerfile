@@ -67,6 +67,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 COPY --from=pg_trunk /trunk /usr/local/bin/trunk
 
 RUN trunk install pg_net
+RUN trunk install pgmq
 
 # Haproxy
 RUN curl https://haproxy.debian.net/bernat.debian.org.gpg \
