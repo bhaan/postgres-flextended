@@ -56,7 +56,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     postgresql-${PG_MAJOR_VERSION}-postgis-$POSTGIS_MAJOR-scripts \
     timescaledb-2-postgresql-${PG_MAJOR_VERSION} \
     timescaledb-toolkit-postgresql-${PG_MAJOR_VERSION} \
-    postgresql-${PG_MAJOR_VERSION}-pgvector
+    postgresql-${PG_MAJOR_VERSION}-pgvector \
+    postgresql-${PG_MAJOR_VERSION}-cron
 
 # Haproxy
 RUN curl https://haproxy.debian.net/bernat.debian.org.gpg \
