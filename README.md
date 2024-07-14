@@ -6,6 +6,7 @@ This repo is an actively maintained fork of [fly-apps/postgres-flex](https://git
 
 - [PostGIS](https://postgis.net/)
 - [TimescaleDB](https://github.com/timescale/timescaledb)
+- [pgvector](https://github.com/pgvector/pgvector)
 
 ## Deploy this on Fly.io
 
