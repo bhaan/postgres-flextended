@@ -9,6 +9,7 @@ This repo is an actively maintained fork of [fly-apps/postgres-flex](https://git
 - [pgvector](https://github.com/pgvector/pgvector)
 - [pg_cron](https://github.com/citusdata/pg_cron)
 - [pg_net](https://github.com/supabase/pg_net)
+- [pgmq](https://github.com/tembo-io/pgmq)
 
 ## Deploy this on Fly.io
 
