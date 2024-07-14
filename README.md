@@ -8,6 +8,7 @@ This repo is an actively maintained fork of [fly-apps/postgres-flex](https://git
 - [TimescaleDB](https://github.com/timescale/timescaledb)
 - [pgvector](https://github.com/pgvector/pgvector)
 - [pg_cron](https://github.com/citusdata/pg_cron)
+- [pg_net](https://github.com/supabase/pg_net)
 
 ## Deploy this on Fly.io
 
