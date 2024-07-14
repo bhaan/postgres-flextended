@@ -152,11 +152,7 @@ func (c *PGConfig) SetDefaults(store *state.Store) error {
 	}
 	sharedBuffersMb := sharedBuffersBytes / (1024 * 1024)
 
-	sharedPreloadLibraries := []string{"repmgr"}
-	// preload timescaledb if enabled
-	if os.Getenv("TIMESCALEDB_ENABLED") == "true" {
-		sharedPreloadLibraries = append(sharedPreloadLibraries, "timescaledb")
-	}
+	sharedPreloadLibraries := []string{"repmgr", "postgis-3", "timescaledb"}
 
 	c.internalConfig = ConfigMap{
 		"listen_addresses":         "'*'",

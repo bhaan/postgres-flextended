@@ -19,6 +19,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -v -o /fly/bin/start ./cmd/start
 COPY ./bin/* /fly/bin/
 
 FROM wrouesnel/postgres_exporter:latest AS postgres_exporter
+
 FROM postgres:${PG_VERSION}
 ENV PGDATA=/data/postgresql
 ENV PGPASSFILE=/data/.pgpass
@@ -28,6 +29,8 @@ ARG VERSION
 ARG PG_MAJOR_VERSION
 ARG POSTGIS_MAJOR=3
 ARG HAPROXY_VERSION=2.8
+
+LABEL org.opencontainers.image.source=https://github.com/bhaan/postgres-flextended
 
 LABEL fly.app_role=postgres_cluster
 LABEL fly.version=${VERSION}
@@ -45,10 +48,14 @@ RUN apt-get update && \
     apt-get install -y ./postgresql-${PG_MAJOR_VERSION}-repmgr_5.3.3-2_amd64.deb \
     && rm ./postgresql-${PG_MAJOR_VERSION}-repmgr_5.3.3-2_amd64.deb
 
-# PostGIS
+RUN echo "deb https://packagecloud.io/timescale/timescaledb/debian/ $(cat /etc/os-release | grep VERSION_CODENAME | cut -d'=' -f2) main" > /etc/apt/sources.list.d/timescaledb.list \
+    && curl -L https://packagecloud.io/timescale/timescaledb/gpgkey | apt-key add -
+
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
-    postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts
+    postgresql-${PG_MAJOR_VERSION}-postgis-$POSTGIS_MAJOR \
+    postgresql-${PG_MAJOR_VERSION}-postgis-$POSTGIS_MAJOR-scripts \
+    timescaledb-2-postgresql-${PG_MAJOR_VERSION} \
+    timescaledb-toolkit-postgresql-${PG_MAJOR_VERSION}
 
 # Haproxy
 RUN curl https://haproxy.debian.net/bernat.debian.org.gpg \
