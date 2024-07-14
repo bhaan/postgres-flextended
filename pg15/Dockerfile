@@ -18,6 +18,11 @@ RUN CGO_ENABLED=0 GOOS=linux go build -v -o /fly/bin/start ./cmd/start
 
 COPY ./bin/* /fly/bin/
 
+FROM rust:latest as pg_trunk
+
+RUN cargo install pg-trunk
+RUN cp $(which trunk) /trunk
+
 FROM wrouesnel/postgres_exporter:latest AS postgres_exporter
 
 FROM postgres:${PG_VERSION}
@@ -58,6 +63,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     timescaledb-toolkit-postgresql-${PG_MAJOR_VERSION} \
     postgresql-${PG_MAJOR_VERSION}-pgvector \
     postgresql-${PG_MAJOR_VERSION}-cron
+
+COPY --from=pg_trunk /trunk /usr/local/bin/trunk
+
+RUN trunk install pg_net
 
 # Haproxy
 RUN curl https://haproxy.debian.net/bernat.debian.org.gpg \

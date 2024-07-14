@@ -152,7 +152,7 @@ func (c *PGConfig) SetDefaults(store *state.Store) error {
 	}
 	sharedBuffersMb := sharedBuffersBytes / (1024 * 1024)
 
-	sharedPreloadLibraries := []string{"repmgr", "postgis-3", "timescaledb", "vector", "pg_cron"}
+	sharedPreloadLibraries := []string{"repmgr", "postgis-3", "timescaledb", "vector", "pg_cron", "pg_net"}
 
 	c.internalConfig = ConfigMap{
 		"listen_addresses":         "'*'",
