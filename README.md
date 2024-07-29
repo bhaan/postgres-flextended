@@ -14,13 +14,13 @@ This repo is an actively maintained fork of [fly-apps/postgres-flex](https://git
 ## Deploy this on Fly.io
 
 ```bash
-fly pg create --name <app-name> --image-ref ghcr.io/bhaan/postgres-flextended:latest
+fly pg create --name <app-name> --image-ref ghcr.io/bhaan/postgres-flextended:16
 ```
 
 ### Update your Fly.io app
 
 ```bash
-fly deploy --app <app-name> --image ghcr.io/bhaan/postgres-flextended:latest
+fly deploy --app <app-name> --image ghcr.io/bhaan/postgres-flextended:16
 ```
 
 See Fly.io's [documentation](https://fly.io/docs/postgres/) for more details on managing your Postgres apps.
