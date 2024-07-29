@@ -19,6 +19,11 @@ RUN CGO_ENABLED=0 GOOS=linux \
 
 COPY ./bin/* /fly/bin/
 
+FROM rust:latest as pg_trunk
+
+RUN cargo install pg-trunk
+RUN cp $(which trunk) /trunk
+
 FROM ubuntu:24.04
 
 ENV PGDATA=/data/postgresql
@@ -29,6 +34,8 @@ ARG PG_MAJOR_VERSION
 ARG POSTGIS_MAJOR=3
 ARG HAPROXY_VERSION=2.8
 ARG REPMGR_VERSION=5.4.1-1build2
+
+LABEL org.opencontainers.image.source=https://github.com/bhaan/postgres-flextended
 
 LABEL fly.app_role=postgres_cluster
 LABEL fly.version=${VERSION}
@@ -53,10 +60,20 @@ RUN curl -L http://launchpadlibrarian.net/722514158/postgresql-${PG_MAJOR_VERSIO
     apt-get install -y ./postgresql-${PG_MAJOR_VERSION}-repmgr_${REPMGR_VERSION}_amd64.deb \
     && rm ./postgresql-${PG_MAJOR_VERSION}-repmgr_${REPMGR_VERSION}_amd64.deb
 
-# PostGIS
+RUN echo "deb https://packagecloud.io/timescale/timescaledb/ubuntu/ jammy main" > /etc/apt/sources.list.d/timescaledb.list \
+    && curl -L https://packagecloud.io/timescale/timescaledb/gpgkey | apt-key add -
+
 RUN apt-get update && apt-get install --no-install-recommends -y \
     postgresql-${PG_MAJOR_VERSION}-postgis-$POSTGIS_MAJOR \
-    postgresql-${PG_MAJOR_VERSION}-postgis-$POSTGIS_MAJOR-scripts
+    postgresql-${PG_MAJOR_VERSION}-postgis-$POSTGIS_MAJOR-scripts \
+    timescaledb-2-postgresql-${PG_MAJOR_VERSION} \
+    postgresql-${PG_MAJOR_VERSION}-pgvector \
+    postgresql-${PG_MAJOR_VERSION}-cron
+
+COPY --from=pg_trunk /trunk /usr/local/bin/trunk
+
+RUN trunk install pg_net
+RUN trunk install pgmq
 
 # Haproxy
 RUN apt-get update && apt-get install --no-install-recommends -y \
